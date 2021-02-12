@@ -13,8 +13,10 @@ public class AppProperties {
 
     private String champion;
     private String leaderboards;
+    private String activeGame;
     private String championMastery;
     private String summoner;
+    private String summonerId;
     private String league;
 
 }

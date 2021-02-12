@@ -1,11 +1,13 @@
 package com.kingname.leagueoflegend.user.summoner;
 
-import com.kingname.leagueoflegend.util.Global;
 import com.kingname.leagueoflegend.config.AppProperties;
 import com.kingname.leagueoflegend.user.champion.ChampionMastery;
 import com.kingname.leagueoflegend.user.champion.ChampionMasteryRepository;
 import com.kingname.leagueoflegend.user.league.League;
 import com.kingname.leagueoflegend.user.league.LeagueRepository;
+import com.kingname.leagueoflegend.user.spectator.ActiveGame;
+import com.kingname.leagueoflegend.user.spectator.Participants;
+import com.kingname.leagueoflegend.util.Global;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -17,9 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -58,6 +58,36 @@ public class SummonerService {
         return updateChampionMastery(summoner);
     }
 
+    public ActiveGame getActiveGame(String name) {
+        ActiveGame activeGame = new ActiveGame();
+        Summoner summoner = getSummoner(name);
+        String requestURL = appProperties.getActiveGame() + summoner.getId();
+        HttpEntity<Object> httpEntity = setHttpContext();
+        try {
+            activeGame = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, ActiveGame.class).getBody();
+            List<Participants> participants = activeGame.getParticipants();
+            participants.forEach(player -> {
+                String summonerName = player.getSummonerName();
+                Summoner summonerLeagueInfo = getSummonerLeagueInfo(summonerName);
+                List<League> leagueList = summonerLeagueInfo.getLeagueList();
+                if (leagueList.size() > 0) {
+                    for (League league : leagueList) {
+                        player.setTier(league.getTier());
+                        player.setRank(league.getRank());
+                        player.setWins(league.getWins());
+                        player.setLosses(league.getLosses());
+                        player.setLeaguePoints(league.getLeaguePoints());
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            activeGame.setGameId("notFound");
+        } finally {
+            return activeGame;
+        }
+    }
+
     private Summoner updateChampionMastery(Summoner summoner) {
         String requestURL = appProperties.getChampionMastery() + summoner.getId();
         HttpEntity<Object> httpEntity = setHttpContext();
@@ -72,9 +102,9 @@ public class SummonerService {
     }
 
     private Summoner updateSummoner(String name) {
-        String summonerName = name.replaceAll(" ", "%20");
-        String requestURL = appProperties.getSummoner() + summonerName;
+        String requestURL = appProperties.getSummoner() + name;
         HttpEntity httpEntity = setHttpContext();
+        log.info(requestURL);
         Summoner summoner = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, Summoner.class).getBody();
         Objects.requireNonNull(summoner).setUpdateDt(LocalDateTime.now());
         return summonerRepository.save(summoner);
@@ -90,7 +120,7 @@ public class SummonerService {
             League save = leagueRepository.save(summonerLeague);
             summoner.getLeagueList().add(save);
         }
-        return summoner;
+        return summonerRepository.save(summoner);
     }
 
     private HttpEntity<Object> setHttpContext() {
