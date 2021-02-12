@@ -5,6 +5,8 @@ import com.kingname.leagueoflegend.user.champion.ChampionMastery;
 import com.kingname.leagueoflegend.user.champion.ChampionMasteryRepository;
 import com.kingname.leagueoflegend.user.league.League;
 import com.kingname.leagueoflegend.user.league.LeagueRepository;
+import com.kingname.leagueoflegend.user.match.Match;
+import com.kingname.leagueoflegend.user.match.MatchRepository;
 import com.kingname.leagueoflegend.user.spectator.ActiveGame;
 import com.kingname.leagueoflegend.user.spectator.Participants;
 import com.kingname.leagueoflegend.util.Global;
@@ -32,6 +34,7 @@ public class SummonerService {
     private final SummonerRepository summonerRepository;
     private final LeagueRepository leagueRepository;
     private final ChampionMasteryRepository championMasteryRepository;
+    private final MatchRepository matchRepository;
     private final ModelMapper modelMapper;
 
     public Summoner getSummoner(String name) {
@@ -50,12 +53,37 @@ public class SummonerService {
         return updateSummonerLeague(summoner);
     }
 
-    public Summoner getChampionMasteryByUsername(String name) {
+    public Summoner getChampionMastery(String name) {
         Summoner summoner = getSummoner(name);
         if (summoner.getChampionMasteryList().size() > 0) {
             return summoner;
         }
         return updateChampionMastery(summoner);
+    }
+
+    public Summoner getMatchList(String name, int page) {
+        Summoner summoner = getSummoner(name);
+        if (summoner.getMatches().size() > 0) {
+            return summoner;
+        }
+        return updateMatchList(summoner, page);
+    }
+
+    private Summoner updateMatchList(Summoner summoner, int page) {
+        int pageSize = 20;
+        int beginIndex = (page - 1) * pageSize;
+        int endIndex = beginIndex + pageSize;
+        String requestURL = appProperties.getMatchlists() + summoner.getAccountId() + "?endIndex=" + endIndex +"&beginIndex=" + beginIndex;
+        log.info(requestURL);
+        HttpEntity<Object> httpEntity = setHttpContext();
+        Map<String, List<Map<String, Object>>> matches = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, Map.class).getBody();
+        List<Map<String, Object>> matchList = matches.get("matches");
+        for (Map<String, Object> match : matchList) {
+            Match newMatch = modelMapper.map(match, Match.class);
+            Match save = matchRepository.save(newMatch);
+            summoner.getMatches().add(save);
+        }
+        return summonerRepository.save(summoner);
     }
 
     public ActiveGame getActiveGame(String name) {
@@ -82,7 +110,8 @@ public class SummonerService {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            activeGame.setGameId("notFound");
+            activeGame.setGameId("게임을 찾을 수 없습니다.");
+            activeGame.setGameMode("n");
         } finally {
             return activeGame;
         }
@@ -91,8 +120,8 @@ public class SummonerService {
     private Summoner updateChampionMastery(Summoner summoner) {
         String requestURL = appProperties.getChampionMastery() + summoner.getId();
         HttpEntity<Object> httpEntity = setHttpContext();
-        List<HashMap<String, Object>> championMasterylist = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, List.class).getBody();
-        for (HashMap<String, Object> champion : championMasterylist) {
+        List<Map<String, Object>> championMasterylist = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, List.class).getBody();
+        for (Map<String, Object> champion : championMasterylist) {
             ChampionMastery championMastery = modelMapper.map(champion, ChampionMastery.class);
             championMastery.setId(championMastery.getSummonerId() + championMastery.getChampionId());
             championMasteryRepository.save(championMastery);

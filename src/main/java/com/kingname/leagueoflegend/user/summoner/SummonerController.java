@@ -28,7 +28,7 @@ public class SummonerController {
 
     @GetMapping("/summoner/mastery/{username}")
     public ResponseEntity<Summoner> viewMasterySummoner(@PathVariable String username) {
-        Summoner summoner = summonerService.getChampionMasteryByUsername(username);
+        Summoner summoner = summonerService.getChampionMastery(username);
         return new ResponseEntity<>(summoner, HttpStatus.OK);
     }
 
@@ -36,5 +36,14 @@ public class SummonerController {
     public ResponseEntity<ActiveGame> viewActiveGameSummoner(@PathVariable String username) {
         ActiveGame activeGame = summonerService.getActiveGame(username);
         return new ResponseEntity<>(activeGame, HttpStatus.OK);
+    }
+
+    @GetMapping("/summoner/matchlist/{username}/{page}")
+    public ResponseEntity<Summoner> viewMatchListSummoner(@PathVariable String username, @PathVariable int page) {
+        if (page < 0) {
+            page = 0;
+        }
+        Summoner matchList = summonerService.getMatchList(username, page);
+        return new ResponseEntity<>(matchList, HttpStatus.OK);
     }
 }

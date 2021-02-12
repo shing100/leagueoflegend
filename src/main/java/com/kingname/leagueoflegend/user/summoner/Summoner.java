@@ -2,6 +2,7 @@ package com.kingname.leagueoflegend.user.summoner;
 
 import com.kingname.leagueoflegend.user.champion.ChampionMastery;
 import com.kingname.leagueoflegend.user.league.League;
+import com.kingname.leagueoflegend.user.match.Match;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -39,4 +40,6 @@ public class Summoner {
     @ManyToMany
     private List<ChampionMastery> championMasteryList = new ArrayList<>();
 
+    @ManyToMany
+    private List<Match> matches = new ArrayList<>();
 }

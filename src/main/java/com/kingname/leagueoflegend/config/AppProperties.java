@@ -18,5 +18,6 @@ public class AppProperties {
     private String summoner;
     private String summonerId;
     private String league;
-
+    private String matchlists;
+    private String matchInfo;
 }
