@@ -1,6 +1,6 @@
-package com.kingname.leagueoflegend.champion;
+package com.kingname.leagueoflegend.gamecommon;
 
-import com.kingname.leagueoflegend.champion.vo.ChampionRotation;
+import com.kingname.leagueoflegend.gamecommon.vo.ChampionRotation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ public class ChampionController {
 
     private final ChampionService championService;
 
-    @GetMapping("/champion")
+    @GetMapping("/championRotation")
     public ResponseEntity<ChampionRotation> viewChampion() {
         ChampionRotation championList = championService.getChampionList();
         return new ResponseEntity<>(championList, HttpStatus.OK);

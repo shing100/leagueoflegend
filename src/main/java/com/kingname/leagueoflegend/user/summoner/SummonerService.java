@@ -1,7 +1,11 @@
-package com.kingname.leagueoflegend.summoner;
+package com.kingname.leagueoflegend.user.summoner;
 
 import com.kingname.leagueoflegend.common.Global;
 import com.kingname.leagueoflegend.config.AppProperties;
+import com.kingname.leagueoflegend.user.champion.ChampionMastery;
+import com.kingname.leagueoflegend.user.champion.ChampionMasteryRepository;
+import com.kingname.leagueoflegend.user.league.League;
+import com.kingname.leagueoflegend.user.league.LeagueRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -16,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,6 +31,7 @@ public class SummonerService {
     private final AppProperties appProperties;
     private final SummonerRepository summonerRepository;
     private final LeagueRepository leagueRepository;
+    private final ChampionMasteryRepository championMasteryRepository;
     private final ModelMapper modelMapper;
 
     public Summoner getSummoner(String name) {
@@ -46,6 +50,27 @@ public class SummonerService {
         return updateSummonerLeague(summoner);
     }
 
+    public Summoner getChampionMasteryByUsername(String name) {
+        Summoner summoner = getSummoner(name);
+        if (summoner.getChampionMasteryList().size() > 0) {
+            return summoner;
+        }
+        return updateChampionMastery(summoner);
+    }
+
+    private Summoner updateChampionMastery(Summoner summoner) {
+        String requestURL = appProperties.getChampionMastery() + summoner.getId();
+        HttpEntity<Object> httpEntity = setHttpContext();
+        List<HashMap<String, Object>> championMasterylist = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, List.class).getBody();
+        for (HashMap<String, Object> champion : championMasterylist) {
+            ChampionMastery championMastery = modelMapper.map(champion, ChampionMastery.class);
+            championMastery.setId(championMastery.getSummonerId() + championMastery.getChampionId());
+            championMasteryRepository.save(championMastery);
+            summoner.getChampionMasteryList().add(championMastery);
+        }
+        return summonerRepository.save(summoner);
+    }
+
     private Summoner updateSummoner(String name) {
         String summonerName = name.replaceAll(" ", "%20");
         String requestURL = appProperties.getSummoner() + summonerName;
@@ -57,7 +82,7 @@ public class SummonerService {
 
     private Summoner updateSummonerLeague(Summoner summoner) {
         String requestURL = appProperties.getLeague() + summoner.getId();
-        HttpEntity httpEntity = setHttpContext();
+        HttpEntity<Object> httpEntity = setHttpContext();
         List<HashMap<String, Object>> leagues = restTemplate.exchange(requestURL, HttpMethod.GET, httpEntity, List.class).getBody();
         for (HashMap<String, Object> league : leagues) {
             League summonerLeague = modelMapper.map(league, League.class);
@@ -68,7 +93,7 @@ public class SummonerService {
         return summoner;
     }
 
-    private HttpEntity setHttpContext() {
+    private HttpEntity<Object> setHttpContext() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set(Global.X_Riot_Token, appProperties.getApikey());
         return new HttpEntity<>(httpHeaders);

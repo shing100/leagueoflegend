@@ -1,6 +1,6 @@
-package com.kingname.leagueoflegend.champion;
+package com.kingname.leagueoflegend.gamecommon;
 
-import com.kingname.leagueoflegend.champion.vo.ChampionRotation;
+import com.kingname.leagueoflegend.gamecommon.vo.ChampionRotation;
 import com.kingname.leagueoflegend.common.Global;
 import com.kingname.leagueoflegend.config.AppProperties;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +29,15 @@ public class ChampionService {
 
     public ChampionRotation getUrlChampionList() {
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl(appProperties.getChampion());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(Global.X_Riot_Token, appProperties.getApikey());
-
-        HttpEntity<Object> httpEntity = new HttpEntity<>(httpHeaders);
+        HttpEntity<Object> httpEntity = setHttpContext();
         ChampionRotation body = restTemplate.exchange(uriComponentsBuilder.toUriString(), HttpMethod.GET, httpEntity, ChampionRotation.class).getBody();
         body.setCreateDt(LocalDateTime.now());
         return body;
+    }
+
+    private HttpEntity<Object> setHttpContext() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(Global.X_Riot_Token, appProperties.getApikey());
+        return new HttpEntity<>(httpHeaders);
     }
 }

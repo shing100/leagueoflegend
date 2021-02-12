@@ -1,4 +1,4 @@
-package com.kingname.leagueoflegend.champion.vo;
+package com.kingname.leagueoflegend.gamecommon.vo;
 
 import lombok.*;
 

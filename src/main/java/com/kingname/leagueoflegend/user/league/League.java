@@ -1,4 +1,4 @@
-package com.kingname.leagueoflegend.summoner;
+package com.kingname.leagueoflegend.user.league;
 
 import lombok.*;
 

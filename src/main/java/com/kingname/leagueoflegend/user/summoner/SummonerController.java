@@ -1,4 +1,4 @@
-package com.kingname.leagueoflegend.summoner;
+package com.kingname.leagueoflegend.user.summoner;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +22,12 @@ public class SummonerController {
     @GetMapping("/summoner/rank/{username}")
     public ResponseEntity<Summoner> viewRankSummoner(@PathVariable String username) {
         Summoner summoner = summonerService.getSummonerLeagueInfo(username);
+        return new ResponseEntity<Summoner>(summoner, HttpStatus.OK);
+    }
+
+    @GetMapping("/summoner/mastery/{username}")
+    public ResponseEntity<Summoner> viewMasterySummoner(@PathVariable String username) {
+        Summoner summoner = summonerService.getChampionMasteryByUsername(username);
         return new ResponseEntity<Summoner>(summoner, HttpStatus.OK);
     }
     
