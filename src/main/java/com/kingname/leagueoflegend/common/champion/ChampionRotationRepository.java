@@ -1,6 +1,5 @@
-package com.kingname.leagueoflegend.gamecommon;
+package com.kingname.leagueoflegend.common.champion;
 
-import com.kingname.leagueoflegend.gamecommon.vo.ChampionRotation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

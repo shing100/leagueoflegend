@@ -12,6 +12,7 @@ public class AppProperties {
     private String apikey;
 
     private String champion;
+    private String leaderboards;
     private String championMastery;
     private String summoner;
     private String league;

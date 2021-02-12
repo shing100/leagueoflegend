@@ -1,6 +1,6 @@
 package com.kingname.leagueoflegend.user.summoner;
 
-import com.kingname.leagueoflegend.common.Global;
+import com.kingname.leagueoflegend.util.Global;
 import com.kingname.leagueoflegend.config.AppProperties;
 import com.kingname.leagueoflegend.user.champion.ChampionMastery;
 import com.kingname.leagueoflegend.user.champion.ChampionMasteryRepository;

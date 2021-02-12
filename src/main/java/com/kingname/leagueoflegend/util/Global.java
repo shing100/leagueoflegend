@@ -1,4 +1,4 @@
-package com.kingname.leagueoflegend.common;
+package com.kingname.leagueoflegend.util;
 
 import org.springframework.stereotype.Component;
 
