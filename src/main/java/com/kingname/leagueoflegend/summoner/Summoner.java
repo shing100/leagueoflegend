@@ -1,0 +1,37 @@
+package com.kingname.leagueoflegend.summoner;
+
+import lombok.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@ToString @Setter @Getter
+@EqualsAndHashCode(of = "id")
+@Builder @NoArgsConstructor @AllArgsConstructor
+public class Summoner {
+
+    @Id
+    private String id;
+
+    @Column(unique = true, nullable = false)
+    private String name;
+
+    private String accountId;
+    private String puuid;
+    private String profileIconId;
+    private Date revisionDate;
+    private String summonerLevel;
+
+    private LocalDateTime updateDt;
+
+    @ManyToMany
+    private List<League> leagueList = new ArrayList<>();
+
+}
