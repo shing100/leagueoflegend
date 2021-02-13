@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <title>LLGG</title>
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        .container {
+            max-width: 100%;
+        }
+        .tagify-outside{
+            border: 0;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<footer th:fragment="footer">
+    <div class="row justify-content-center">
+        <img class="mb-2" src="/images/logo.png" alt="" width="25">
+        <small class="d-block mb-3 text-muted">&copy; 2020</small>
+    </div>
+</footer>
+
+\
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+    <span th:text="${message}">완료</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+</html>
