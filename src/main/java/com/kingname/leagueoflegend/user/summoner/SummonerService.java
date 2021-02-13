@@ -42,7 +42,7 @@ public class SummonerService {
         if (byName != null) {
             return byName;
         }
-        return updateSummoner(name);
+        return updateBaseInfoSummoner(name);
     }
 
     public Summoner getSummonerLeagueInfo(String name) {
@@ -67,6 +67,14 @@ public class SummonerService {
             return summoner;
         }
         return updateMatchList(summoner, page);
+    }
+
+    public Summoner updateSummoner(String name) {
+        Summoner summoner = updateBaseInfoSummoner(name);
+        summoner = updateChampionMastery(summoner);
+        summoner = updateMatchList(summoner, 1);
+        summoner = updateSummonerLeague(summoner);
+        return summoner;
     }
 
     private Summoner updateMatchList(Summoner summoner, int page) {
@@ -99,13 +107,8 @@ public class SummonerService {
                 Summoner summonerLeagueInfo = getSummonerLeagueInfo(summonerName);
                 List<League> leagueList = summonerLeagueInfo.getLeagueList();
                 if (leagueList.size() > 0) {
-                    for (League league : leagueList) {
-                        player.setTier(league.getTier());
-                        player.setRank(league.getRank());
-                        player.setWins(league.getWins());
-                        player.setLosses(league.getLosses());
-                        player.setLeaguePoints(league.getLeaguePoints());
-                    }
+                    League league = leagueList.get(leagueList.size() - 1);
+                    modelMapper.map(league, player);
                 }
             });
         } catch (Exception e) {
@@ -130,7 +133,7 @@ public class SummonerService {
         return summonerRepository.save(summoner);
     }
 
-    private Summoner updateSummoner(String name) {
+    private Summoner updateBaseInfoSummoner(String name) {
         String requestURL = appProperties.getSummoner() + name;
         HttpEntity httpEntity = setHttpContext();
         log.info(requestURL);

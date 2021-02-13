@@ -40,10 +40,13 @@ public class SummonerController {
 
     @GetMapping("/summoner/matchlist/{username}/{page}")
     public ResponseEntity<Summoner> viewMatchListSummoner(@PathVariable String username, @PathVariable int page) {
-        if (page < 0) {
-            page = 0;
-        }
         Summoner matchList = summonerService.getMatchList(username, page);
         return new ResponseEntity<>(matchList, HttpStatus.OK);
+    }
+
+    @GetMapping("/summoner/update/{username}")
+    public ResponseEntity<Summoner> viewUpdateSummoner(@PathVariable String username) {
+        Summoner summoner = summonerService.updateSummoner(username);
+        return new ResponseEntity<>(summoner, HttpStatus.ACCEPTED);
     }
 }
