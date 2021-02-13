@@ -63,7 +63,6 @@ const HeaderLink = styled(Link)`
 
 export default withRouter(({history}) => {
     const search = useInput("");
-    const { data } = useQuery(ME);
     //console.log(meQuery);
 
     const onSearchSubmit = (e) => {
@@ -95,15 +94,6 @@ export default withRouter(({history}) => {
                     <HeaderLink to="/notifications">
                         <HeartEmpty />
                     </HeaderLink>
-                    {data.me.ok ? (
-                        <HeaderLink to="/username">
-                            <User />
-                        </HeaderLink>
-                    ) : (
-                        <HeaderLink to={data.me.user.username}>
-                            <User />
-                        </HeaderLink>
-                    )}
                 </HeaderColumn>
             </HeaderWrapper>
         </Header>
