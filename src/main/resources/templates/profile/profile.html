@@ -25,14 +25,7 @@
         <div class="col-6" th:each="league : ${summoner.leagueList}">
             <div class="col-12 card">
                 <!-- Avatar -->
-                <img th:if="${league.tier.equals('SILVER')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_SILVER.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('PLATINUM')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_PLATINUM.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('MASTER')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_MASTER.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('IRON')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_IRON.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('GOLD')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_GOLD.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('DIAMOND')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_DIAMOND.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('CHALLENGER')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_CHALLENGER.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
-                <img th:if="${league.tier.equals('BRONZE')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_BRONZE.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_'+${league.tier}+'.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
                 <div class="card-body">
                     <p class="card-text text-center" th:if="${league.queueType.equals('RANKED_SOLO_5x5')}" th:text="${'솔로랭크'}"></p>
                     <p class="card-text text-center" th:if="${league.queueType.equals('RANKED_FLEX_SR')}" th:text="${'자유랭크'}"></p>
