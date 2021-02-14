@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<link href="/assets/css/material-kit.css" rel="stylesheet" />
+<link href="/assets/css/material-kit.css" rel="stylesheet" />
+<body>
+<nav th:replace="fragments.html :: navbar"></nav>
+<div th:replace="fragments.html :: message"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <!-- Avatar -->
+            <img th:if="${!#strings.isEmpty(summoner.profileIconId)}" class="img-fluid float-left rounded img-thumbnail"
+                 th:src="${summoner.getProfileImage()}"
+                 width="150" height="150"/>
+        </div>
+        <div class="col-8">
+            <h1 class="display-4 " th:text="${summoner.name}">name</h1>
+            <span class="lead" th:if="${!#strings.isEmpty(summoner.summonerLevel)}" th:text="${summoner.summonerLevel + ' LEVEL'}">level</span>
+            <button type="button" class="btn btn-info">전적 업데이트</button>
+        </div>
+    </div>
+    <hr/>
+    <div class="row justify-content-center">
+        <div class="col-6" th:each="league : ${summoner.leagueList}">
+            <div class="col-12 card">
+                <!-- Avatar -->
+                <img th:if="${league.tier.equals('SILVER')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_SILVER.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('PLATINUM')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_PLATINUM.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('MASTER')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_MASTER.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('IRON')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_IRON.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('GOLD')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_GOLD.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('DIAMOND')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_DIAMOND.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('CHALLENGER')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_CHALLENGER.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <img th:if="${league.tier.equals('BRONZE')}" class="card-img-overlay" th:src="@{'/ranked-emblems/Emblem_BRONZE.png'}" height="130" width="130" rel="nofollow" alt="Card image cap"/>
+                <div class="card-body">
+                    <p class="card-text text-center" th:if="${league.queueType.equals('RANKED_SOLO_5x5')}" th:text="${'솔로랭크'}"></p>
+                    <p class="card-text text-center" th:if="${league.queueType.equals('RANKED_FLEX_SR')}" th:text="${'자유랭크'}"></p>
+                    <p class="card-text text-center" th:text="${league.rank + '티어 ' + league.leaguePoints + '점'}">rank</p>
+                    <p class="card-text text-center" th:text="${league.wins + '승 ' + league.losses + '패 (' + league.getOdds() + '%)'}">승패</p>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="col-12">
+            <div class="card card-nav-tabs text-center mb-5" th:each="match : ${summoner.matches}">
+                <div class="card-header card-header-primary" th:text="${'시즌 ' + match.season + ' ' + match.role}"></div>
+                <div class="card-body">
+                    <img th:if="${!#strings.isEmpty(match.champion)}" class="img-fluid float-left rounded img-thumbnail"
+                         th:src="${match.champion}"
+                         width="135" height="135"/>
+                    <h4 class="card-title">게임정보</h4>
+                    <p class="card-text" th:text="${'시즌 ' + match.season}"></p>
+                    <p class="card-text" th:text="${'챔피언 ' + match.champion}"></p>
+                    <a href="#" th:value="${match.gameId}" class="btn btn-primary">자세히보기</a>
+                </div>
+                <div class="card-footer text-muted" th:text="${match.getDate()}"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</body>
+</html>

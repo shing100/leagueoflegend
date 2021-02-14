@@ -42,4 +42,8 @@ public class Summoner {
 
     @ManyToMany
     private List<Match> matches = new ArrayList<>();
+
+    public String getProfileImage() {
+        return "http://ddragon.leagueoflegends.com/cdn/11.3.1/img/profileicon/" + this.profileIconId + ".png";
+    }
 }

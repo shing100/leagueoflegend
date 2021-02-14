@@ -28,4 +28,8 @@ public class League {
     private Boolean inactive;
     private Boolean freshBlood;
     private Boolean hotStreak;
+
+    public float getOdds() {
+        return this.wins / (this.wins + this.losses);
+    }
 }

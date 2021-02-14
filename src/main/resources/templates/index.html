@@ -1,42 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments.html :: head"></head>
-<body class="bg-light">
-<div class="container">
-    <div class="title-container">
-        <h1 class="title">It's all about context.</h1>
-        <h1 class="title-down">Ajax'ing something...</h1>
+<link rel="stylesheet" href="/assets/css/index.css">
+<body>
+<div class="wrapper">
+    <div class="container-search">
+        <h1>LL SEARCH</h1>
+        <form th:action="@{/profile}" class="container-input" method="get">
+            <input type="text" id="username" name="username" class="search-term" placeholder="소환사 검색하기">
+            <button type="submit" class="search-button" id="selectTheory">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+        <div th:replace="fragments.html :: message"></div>
+        <ul class="search-history">
+            <li>
+                <span class="text"><a th:href="@{/profile(username='연구바이블')}">연구바이블</a></span>
+                <a th:href="@{/profile(username='연구바이블')}" class="link"></a>
+            </li>
+            <li>
+                <span class="text"><a th:href="@{/profile(username='호빵둥절')}">호빵둥절</a></span>
+                <a th:href="@{/profile(username='호빵둥절')}" class="link"></a>
+            </li>
+            <li>
+                <span class="text"><a th:href="@{/profile(username='근자근')}">근자근</a></span>
+                <a th:href="@{/profile(username='근자근')}" class="link"></a>
+            </li>
+        </ul>
     </div>
-
-    <fieldset class="field-container" style="margin-bottom: 40px;">
-        <input type="text" placeholder="Search..." class="field" />
-        <div class="icons-container">
-            <div class="icon-search"></div>
-            <div class="icon-close">
-                <div class="x-up"></div>
-                <div class="x-down"></div>
-            </div>
-        </div>
-    </fieldset>
-    <div th:replace="fragments.html :: footer"></div>
 </div>
 </body>
+<script src="/node_modules/aos/dist/aos.js"></script>
 <script type="application/javascript" th:inline="javascript">
-    $(document).on('ready', function() {
-        $('.field').on('focus', function() {
-            $('body').addClass('is-focus');
-        });
-
-        $('.field').on('blur', function() {
-            $('body').removeClass('is-focus is-type');
-        });
-
-        $('.field').on('keydown', function(event) {
-            $('body').addClass('is-type');
-            if((event.which === 8) && $(this).val() === '') {
-                $('body').removeClass('is-type');
-            }
-        });
-    });
+    AOS.init();
 </script>
 </html>

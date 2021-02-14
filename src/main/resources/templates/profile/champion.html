@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments.html :: head"></head>
+<link href="/assets/css/material-kit.css" rel="stylesheet" />
+<body>
+<nav th:replace="fragments.html :: navbar"></nav>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <!-- Avatar -->
+            <img th:if="${!#strings.isEmpty(summoner.profileIconId)}" class="img-fluid float-left rounded img-thumbnail"
+                 th:src="${summoner.getProfileImage()}"
+                 width="150" height="150"/>
+        </div>
+        <div class="col-8">
+            <h1 class="display-4 " th:text="${summoner.name}">name</h1>
+            <span class="lead" th:if="${!#strings.isEmpty(summoner.summonerLevel)}" th:text="${summoner.summonerLevel + ' LEVEL'}">level</span>
+            <button type="button" class="btn btn-info">전적 업데이트</button>
+        </div>
+    </div>
+    <hr/>
+    <div class="row col-12 justify-content-center">
+        <div class="col-3 card card-nav-tabs text-center m-3" th:each="champion : ${summoner.championMasteryList}">
+            <div class="card-header card-header-info" th:text="${'챔피언 ' + champion.championId + ' 레발' + champion.championLevel}"></div>
+            <div class="card-body">
+                <img th:if="${!#strings.isEmpty(champion.championId)}" class="img-fluid float-left rounded img-thumbnail"
+                     th:src="${champion.championId}"
+                     width="180" height="180"/>
+                <h4 class="card-title" th:text="${'챔피언 ' + champion.championId}"></h4>
+                <p class="card-text" th:text="${'레벨 ' + champion.championLevel}"></p>
+                <p class="card-text" th:text="${'포인트 ' + champion.championPoints}"></p>
+                <p class="card-text" th:text="${'다음 레벨까지 ' + champion.championPointsUntilNextLevel} + '포인트'"></p>
+                <a href="#" th:value="${champion.championId}" class="btn btn-primary">챔피언정보</a>
+            </div>
+            <div class="card-footer text-muted" th:text="${champion.lastPlayTime}"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
