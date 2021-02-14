@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <p class="card-text text-center" th:if="${league.queueType.equals('RANKED_SOLO_5x5')}" th:text="${'솔로랭크'}"></p>
                     <p class="card-text text-center" th:if="${league.queueType.equals('RANKED_FLEX_SR')}" th:text="${'자유랭크'}"></p>
-                    <p class="card-text text-center" th:text="${league.rank + '티어 ' + league.leaguePoints + '점'}">rank</p>
+                    <p class="card-text text-center" th:text="${league.tier + ' ' + league.rank + ' / ' + league.leaguePoints + 'LP'}">rank</p>
                     <p class="card-text text-center" th:text="${league.wins + '승 ' + league.losses + '패 (' + league.getOdds() + '%)'}">승패</p>
                 </div>
             </div>
